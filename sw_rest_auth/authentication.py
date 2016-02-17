@@ -38,7 +38,8 @@ class TokenServiceAuthentication(BaseAuthentication):
 
         return self._check_token(token_key)
 
-    def _check_token(self, token_key):
+    @staticmethod
+    def _check_token(token_key):
         url = settings.AUTH_SERVICE_CHECK_TOKEN_URL
         auth_token = settings.AUTH_TOKEN
 

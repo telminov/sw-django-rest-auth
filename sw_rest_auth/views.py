@@ -14,3 +14,9 @@ def check_token(request):
     return Response({'username': token.user.username})
 
 
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def check_perm(request):
+    serializer = serializers.CheckPerm(data=request.query_params)
+    serializer.is_valid(raise_exception=True)
+    return Response({'result': 'ok'})
