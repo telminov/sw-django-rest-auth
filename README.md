@@ -64,7 +64,7 @@ def index(request):
 ### Authorizing
 add to settings.py
 ```python
-AUTH_SERVICE_CHECK_PERM_URL = 'http://127.0.0.1:8001/check_perm/'
+AUTH_SERVICE_CHECK_PERM_URL = 'http://.../check_perm/'
 ```
 
 Add CodePermission to view permissions class. For example:
