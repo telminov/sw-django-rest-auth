@@ -37,13 +37,14 @@ REST_FRAMEWORK = {
 ```
 
 ## Client for authentication service
+### Authentication
 add to settings.py
 ```python
 AUTH_SERVICE_CHECK_TOKEN_URL = 'https://.../check_token/'   # address for authentication service project
 AUTH_TOKEN = '0f49bc20b02bc70b034bd9d6036c8155e00109eb'     # token for connecting to authentication service
 ```
 
-view looks like
+Add TokenServiceAuthentication to authentication_classes. For example:
 ```python
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -60,13 +61,13 @@ def index(request):
     return Response(data)
 ```
 
-## Authorizing
+### Authorizing
 add to settings.py
 ```python
 AUTH_SERVICE_CHECK_PERM_URL = 'http://127.0.0.1:8001/check_perm/'
 ```
 
-add to view permissions class
+Add CodePermission to view permissions class. For example:
 ```python
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
