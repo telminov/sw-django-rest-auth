@@ -35,6 +35,7 @@ REST_FRAMEWORK = {
     ),
 }
 ```
+You can generate token using [obtain_auth_token view](http://www.django-rest-framework.org/api-guide/authentication/#generating-tokens)
 
 ## Client for authentication service
 ### Authentication
@@ -52,7 +53,7 @@ from sw_rest_auth.authentication import TokenServiceAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
-@authentication_classes((TokenServiceAuthentication))
+@authentication_classes((TokenServiceAuthentication,))
 @permission_classes((IsAuthenticated,))
 def index(request):
     data = {
@@ -75,7 +76,7 @@ from sw_rest_auth.authentication import TokenServiceAuthentication
 from sw_rest_auth.permissions import CodePermission
 
 @api_view(['GET'])
-@authentication_classes((TokenServiceAuthentication))
+@authentication_classes((TokenServiceAuthentication,))
 @permission_classes((CodePermission.decorate(code='CAN_READ_SECRET_DATA'),))
 def index(request):
     data = {
@@ -87,3 +88,9 @@ def index(request):
 
 Don't forget add permissions and permission-user relations in authentication service database
 (by means admin interface, for example).
+
+### Requesting
+Request to resourse under TokenServiceAuthentication protecting must have header "Authorization" with value starting with "TokenService " and authorized at service token. For example:
+```
+TokenService 213fe72ffb54e6c83194ec591fb364c3f897ed12
+```
