@@ -6,7 +6,7 @@ import requests
 
 class CodePermission(permissions.BasePermission):
     def __init__(self, permission_code):
-        super(CodePermission).__init__()
+        super(CodePermission, self).__init__()
         self.permission_code = permission_code
 
     def has_permission(self, request, view):
