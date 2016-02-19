@@ -35,6 +35,7 @@ REST_FRAMEWORK = {
     ),
 }
 ```
+You can generate token using [obtain_auth_token view](http://www.django-rest-framework.org/api-guide/authentication/#generating-tokens)
 
 ## Client for authentication service
 ### Authentication
