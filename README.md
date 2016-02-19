@@ -53,7 +53,7 @@ from sw_rest_auth.authentication import TokenServiceAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
-@authentication_classes((TokenServiceAuthentication))
+@authentication_classes((TokenServiceAuthentication,))
 @permission_classes((IsAuthenticated,))
 def index(request):
     data = {
@@ -76,7 +76,7 @@ from sw_rest_auth.authentication import TokenServiceAuthentication
 from sw_rest_auth.permissions import CodePermission
 
 @api_view(['GET'])
-@authentication_classes((TokenServiceAuthentication))
+@authentication_classes((TokenServiceAuthentication,))
 @permission_classes((CodePermission.decorate(code='CAN_READ_SECRET_DATA'),))
 def index(request):
     data = {
