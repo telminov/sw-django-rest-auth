@@ -88,3 +88,9 @@ def index(request):
 
 Don't forget add permissions and permission-user relations in authentication service database
 (by means admin interface, for example).
+
+### Requesting
+Request to resourse under TokenServiceAuthentication protecting must have header "Authorization" with value starting with "TokenService " and authorized at service token. For example:
+```
+TokenService 213fe72ffb54e6c83194ec591fb364c3f897ed12
+```
