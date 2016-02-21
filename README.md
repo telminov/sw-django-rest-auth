@@ -1,4 +1,6 @@
 # sw-django-rest-auth
+[![pypi-version](https://img.shields.io/pypi/v/sw-django-rest-auth.svg)](https://pypi.python.org/pypi/sw-django-rest-auth)
+
 
 Package for creating separate authentication service
 and using one in other services via rest_framework authentication classes mechanism.
