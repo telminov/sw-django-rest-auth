@@ -1,4 +1,6 @@
 # sw-django-rest-auth
+[![Build Status](https://travis-ci.org/telminov/sw-django-rest-auth.svg?branch=master)](https://travis-ci.org/telminov/sw-django-rest-auth)
+[![Coverage Status](https://coveralls.io/repos/github/telminov/sw-django-rest-auth/badge.svg?branch=master)](https://coveralls.io/github/telminov/sw-django-rest-auth?branch=master)
 [![pypi-version](https://img.shields.io/pypi/v/sw-django-rest-auth.svg)](https://pypi.python.org/pypi/sw-django-rest-auth)
 
 
