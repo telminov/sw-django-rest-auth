@@ -2,6 +2,7 @@
 import requests
 from django.test import mock
 from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework import test, status
 from rest_framework.authtoken.models import Token
 from .. import authentication
@@ -11,8 +12,8 @@ class AuthenticationTestCase(test.APITestCase):
 
     def setUp(self):
         user = User.objects.create(username='tester')
-        token = Token.objects.create(user=user)
-        self.header = {'HTTP_AUTHORIZATION': 'TokenService ' + token.key}
+        self.token = Token.objects.create(user=user)
+        self.header = {'HTTP_AUTHORIZATION': 'TokenService ' + self.token.key}
         self.request_factory = test.APIRequestFactory()
         self.request = self.request_factory.get('/some_url/', **self.header)
 
@@ -23,7 +24,9 @@ class AuthenticationTestCase(test.APITestCase):
 
         user, _ = authentication.TokenServiceAuthentication().authenticate(self.request)
 
-        self.assertTrue(requests_mock.post.called)
+        call_args, call_kwargs = requests_mock.post.call_args
+        self.assertEqual(settings.AUTH_SERVICE_CHECK_TOKEN_URL, call_args[0])
+        self.assertEqual(self.token.key, call_kwargs['data']['token'])
         self.assertEqual(user.username, requests_mock.post.return_value.json.return_value['username'])
 
     @mock.patch('sw_rest_auth.authentication.requests')
