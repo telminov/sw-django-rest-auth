@@ -40,16 +40,12 @@ class AuthenticationTestCase(test.APITestCase):
         self.assertTrue(requests_mock.post.called)
         self.assertIsNotNone(auth_ex)
 
-    @mock.patch('sw_rest_auth.authentication.requests')
+    @mock.patch('sw_rest_auth.authentication.requests.head', side_effect=requests.ConnectionError)
     def test_connection_error(self, requests_mock):
-        requests_mock.post.side_effect = requests.ConnectionError('Error')
-
         auth_ex = None
         try:
             authentication.TokenServiceAuthentication().authenticate(self.request)
         except authentication.exceptions.AuthenticationFailed as ex:
             auth_ex = ex
-
-        self.assertTrue(requests_mock.post.called)
         self.assertIsNotNone(auth_ex)
 
