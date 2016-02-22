@@ -11,7 +11,6 @@ install:
   - pip install .
   - pip install coveralls
 script:
-  - coverage run --source=sw_rest_auth setup.py test
-  - coverage report --omit=sw_rest_auth/tests/helpers.py
+  - coverage run --source=sw_rest_auth --omit=sw_rest_auth/tests/helpers.py setup.py test
 after_success:
   - coveralls
