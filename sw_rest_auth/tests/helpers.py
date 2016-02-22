@@ -1,12 +1,11 @@
 # coding: utf-8
-from django.core.urlresolvers import reverse
 from django.test import mock
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework import test, status
 
 
-class AuthHelperMixin(test.APITestCase):
+class AuthHelperMixin:
 
     def setUp(self):
         super().setUp()
@@ -38,7 +37,7 @@ class AuthHelperMixin(test.APITestCase):
             self.requests_mock.get.side_effect = None
 
 
-class AuthTestCaseMixin(AuthHelperMixin, test.APITestCase):
+class AuthTestCaseMixin(AuthHelperMixin):
     url = None
     perm = None
 

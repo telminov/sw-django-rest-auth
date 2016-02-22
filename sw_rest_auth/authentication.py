@@ -1,5 +1,4 @@
 # coding: utf-8
-import json
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework import exceptions
@@ -51,12 +50,12 @@ class TokenServiceAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed('Invalid token header. ConnectionError.')
 
         if r.status_code == 200:
-            result = json.loads(r.text)
+            result = r.json()
             user = User(username=result['username'])
             return user, None
 
         elif r.status_code == 400:
-            result = json.loads(r.text)
+            result = r.json()
             token_err_description = ', '.join(result['token'])
             raise exceptions.AuthenticationFailed('Invalid token header. %s' % token_err_description)
 

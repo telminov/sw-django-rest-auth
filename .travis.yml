@@ -1,0 +1,16 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+env:
+  - DJANGO=1.8
+  - DJANGO=1.9
+services:
+  - mongodb
+install:
+  - pip install .
+  - pip install coveralls
+script:
+  - coverage run --source=sw_rest_auth setup.py test
+after_success:
+  - coveralls
