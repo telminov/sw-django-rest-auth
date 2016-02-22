@@ -42,7 +42,7 @@ class AuthenticationTestCase(test.APITestCase):
 
     @mock.patch('sw_rest_auth.authentication.requests')
     def test_connection_error(self, requests_mock):
-        requests_mock.post.return_value.side_effect = requests.ConnectionError('Error')
+        requests_mock.post.side_effect = requests.ConnectionError('Error')
 
         auth_ex = None
         try:
