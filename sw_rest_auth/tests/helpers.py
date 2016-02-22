@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework import test, status
 
 
-class AuthHelperMixin:
+class AuthHelperMixin(object):
 
     def setUp(self):
         super(AuthHelperMixin, self).setUp()
