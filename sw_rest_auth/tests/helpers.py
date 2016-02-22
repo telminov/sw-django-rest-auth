@@ -8,12 +8,12 @@ from rest_framework import test, status
 class AuthHelperMixin:
 
     def setUp(self):
-        super().setUp()
+        super(AuthHelperMixin, self).setUp()
         self.requests_patcher = mock.patch('sw_rest_auth.permissions.requests')
         self.requests_mock = self.requests_patcher.start()
 
     def tearDown(self):
-        super().tearDown()
+        super(AuthHelperMixin, self).tearDown()
         self.requests_mock.stop()
 
     def assertPermChecked(self, user, perm):
@@ -42,7 +42,7 @@ class AuthTestCaseMixin(AuthHelperMixin):
     perm = None
 
     def setUp(self):
-        super().setUp()
+        super(AuthTestCaseMixin, self).setUp()
         self.client.force_authenticate(self.get_user())
         self.force_permission(self.get_user(), self.perm)
 
