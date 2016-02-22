@@ -52,6 +52,9 @@ class AuthTestCaseMixin(AuthHelperMixin):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_forbidden(self):
+        if not self.perm:
+            return
+
         self.client.force_authenticate(user=self.get_user())
         self.force_permission()     # unset permission
         response = self.client.post(self.url)
@@ -59,6 +62,9 @@ class AuthTestCaseMixin(AuthHelperMixin):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_perm(self):
+        if not self.perm:
+            return
+
         self.client.force_authenticate(self.get_user())
         self.force_permission(self.get_user(), self.perm)
         response = self.client.post(self.url)
