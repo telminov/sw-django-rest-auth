@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='sw-django-rest-auth',
-    version='0.0.9',
+    version='0.0.10',
     description='Soft Way company django restfromework authentication service package.',
     author='Telminov Sergey',
     url='https://github.com/telminov/sw-django-rest-auth',
