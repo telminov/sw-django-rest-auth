@@ -11,6 +11,9 @@ class CodePermission(permissions.BasePermission):
         self.permission_code = permission_code
 
     def has_permission(self, request, view):
+        if not (request.user and request.user.username):
+            return False
+
         url = settings.AUTH_SERVICE_CHECK_PERM_URL
         auth_token = settings.AUTH_TOKEN
 
