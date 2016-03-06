@@ -4,6 +4,7 @@ from django.conf import settings
 from django.test import mock
 from django.contrib.auth.models import User
 from rest_framework import test, status
+from rest_framework.exceptions import PermissionDenied
 from .. import permissions
 
 
@@ -34,12 +35,22 @@ class PermissionTestCase(test.APITestCase):
 
         perm_code = 'TEST_CODE'
         perm = permissions.CodePermission.decorate(perm_code)()
-        has_permission = perm.has_permission(self.request, mock.Mock())
-        self.assertFalse(has_permission)
+
+        exception = None
+        try:
+            perm.has_permission(self.request, mock.Mock())
+        except PermissionDenied as ex:
+            exception = ex
+        self.assertTrue(exception)
 
     @mock.patch('sw_rest_auth.permissions.requests.head', side_effect=requests.ConnectionError)
     def test_connection_error(self, requests_mock):
         perm_code = 'TEST_CODE'
         perm = permissions.CodePermission.decorate(perm_code)()
-        has_permission = perm.has_permission(self.request, mock.Mock())
-        self.assertFalse(has_permission)
+
+        exception = None
+        try:
+            perm.has_permission(self.request, mock.Mock())
+        except PermissionDenied as ex:
+            exception = ex
+        self.assertTrue(exception)

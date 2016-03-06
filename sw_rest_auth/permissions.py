@@ -2,6 +2,7 @@
 from django.conf import settings
 from rest_framework import permissions
 import requests
+from rest_framework.exceptions import PermissionDenied
 
 
 class CodePermission(permissions.BasePermission):
@@ -18,9 +19,13 @@ class CodePermission(permissions.BasePermission):
         try:
             r = requests.get(url, headers=headers, params=params)
         except requests.ConnectionError:
-            return False
+            raise PermissionDenied(detail='Can not connect to authorization service')
 
-        return r.status_code == 200
+        if r.status_code != 200:
+            detail = '; '.join(['%s: %s' % (k, ', '.join(v)) for k, v in r.json().items()])
+            raise PermissionDenied(detail=detail)
+
+        return True
 
     @classmethod
     def decorate(cls, code):
