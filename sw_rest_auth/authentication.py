@@ -46,7 +46,13 @@ class TokenServiceAuthentication(BaseAuthentication):
         headers = {'Authorization': 'Token %s' % auth_token}
         data = {'token': token_key}
         try:
-            r = requests.post(url, headers=headers, data=data, verify=auth_verified_ssl_crt)
+            kwargs = {
+                'headers': headers,
+                'data': data,
+            }
+            if auth_verified_ssl_crt:
+                kwargs['verify'] = auth_verified_ssl_crt
+            r = requests.post(url, **kwargs)
         except requests.ConnectionError:
             raise exceptions.AuthenticationFailed('Invalid token header. ConnectionError.')
 
