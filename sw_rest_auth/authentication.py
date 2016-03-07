@@ -41,11 +41,12 @@ class TokenServiceAuthentication(BaseAuthentication):
     def _check_token(token_key):
         url = settings.AUTH_SERVICE_CHECK_TOKEN_URL
         auth_token = settings.AUTH_TOKEN
+        auth_verified_ssl_crt = getattr(settings, 'AUTH_VERIFIED_SSL_CRT_PATH', None)
 
         headers = {'Authorization': 'Token %s' % auth_token}
         data = {'token': token_key}
         try:
-            r = requests.post(url, headers=headers, data=data)
+            r = requests.post(url, headers=headers, data=data, verify=auth_verified_ssl_crt)
         except requests.ConnectionError:
             raise exceptions.AuthenticationFailed('Invalid token header. ConnectionError.')
 

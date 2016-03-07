@@ -47,6 +47,7 @@ add to settings.py
 ```python
 AUTH_SERVICE_CHECK_TOKEN_URL = 'https://.../check_token/'   # address for authentication service project
 AUTH_TOKEN = '0f49bc20b02bc70b034bd9d6036c8155e00109eb'     # token for connecting to authentication service
+AUTH_VERIFIED_SSL_CRT_PATH = '/etc/ssl/myCompanyCA.crt'     # optional path to auth service server ssl-certificate
 ```
 
 Add TokenServiceAuthentication to authentication_classes. For example:

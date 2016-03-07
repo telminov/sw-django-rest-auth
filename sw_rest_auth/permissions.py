@@ -16,11 +16,12 @@ class CodePermission(permissions.BasePermission):
 
         url = settings.AUTH_SERVICE_CHECK_PERM_URL
         auth_token = settings.AUTH_TOKEN
+        auth_verified_ssl_crt = getattr(settings, 'AUTH_VERIFIED_SSL_CRT_PATH', None)
 
         headers = {'Authorization': 'Token %s' % auth_token}
         params = {'user': request.user.username, 'perm': self.permission_code}
         try:
-            r = requests.get(url, headers=headers, params=params)
+            r = requests.get(url, headers=headers, params=params, verify=auth_verified_ssl_crt)
         except requests.ConnectionError:
             raise PermissionDenied(detail='Can not connect to authorization service')
 
