@@ -58,7 +58,11 @@ class TokenServiceAuthentication(BaseAuthentication):
 
         if r.status_code == 200:
             result = r.json()
-            user = User(username=result['username'])
+            username = result['username']
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = User(username=username)
             return user, None
 
         elif r.status_code == 400:
