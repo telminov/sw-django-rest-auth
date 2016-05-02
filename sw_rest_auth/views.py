@@ -1,9 +1,12 @@
 # coding: utf-8
+import logging
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import rest_framework.authtoken.views
 from . import serializers
+
+logger = logging.getLogger('sw.rest.auth')
 
 
 @api_view(['POST'])
@@ -32,6 +35,7 @@ def check_token(request):
     serializer = serializers.CheckToken(data=request.data)
     serializer.is_valid(raise_exception=True)
     token = serializer.validated_data['token']
+    logger.debug('Token correct', extra={'token': token, 'username': token.user.username})
     return Response({'username': token.user.username})
 
 
@@ -74,6 +78,7 @@ def check_perm(request):
     """
     serializer = serializers.CheckPerm(data=request.query_params)
     serializer.is_valid(raise_exception=True)
+    logger.debug('User have perm', extra=serializer.data)
     return Response({'result': 'ok'})
 
 
