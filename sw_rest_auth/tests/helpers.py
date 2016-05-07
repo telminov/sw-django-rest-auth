@@ -22,16 +22,19 @@ class AuthHelperMixin(object):
         self.assertEqual(user.username, call_kwargs['params']['user'])
         self.assertEqual(perm, call_kwargs['params']['perm'])
 
-    def force_permission(self, user=None, perm=None):
+    def force_permission(self, user=None, perm=None, perm_list=None):
+        if not perm_list and perm:
+            perm_list = [perm]
+
         def side_effect(url, headers, params):
             response_mock = mock.Mock()
-            if params['user'] == user.username and params['perm'] == perm:
+            if params['user'] == user.username and params['perm'] in perm_list:
                 response_mock.status_code = status.HTTP_200_OK
             else:
                 response_mock.status_code = status.HTTP_400_BAD_REQUEST
             return response_mock
 
-        if user and perm:
+        if user and perm_list:
             self.requests_mock.get.side_effect = side_effect
         else:
             self.requests_mock.get.side_effect = None
@@ -40,37 +43,46 @@ class AuthHelperMixin(object):
 class AuthTestCaseMixin(AuthHelperMixin):
     url = None
     perm = None
+    method_name = 'post'
+
+    def get_perm_map(self):
+        return {
+            self.method_name: self.perm,
+        }
 
     def setUp(self):
         super(AuthTestCaseMixin, self).setUp()
         self.client.force_authenticate(self.get_user())
-        self.force_permission(self.get_user(), self.perm)
+        self.force_permission(self.get_user(), perm_list=self.get_perm_map().values())
 
     def test_not_auth(self):
         self.client.force_authenticate()         # unset authentication
-        response = self.client.post(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        for method_name in self.get_perm_map().keys():
+            response = getattr(self.client, method_name)(self.url)
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_forbidden(self):
-        if not self.perm:
+        if not self.get_perm_map():
             return
 
         self.client.force_authenticate(user=self.get_user())
         self.force_permission()     # unset permission
-        response = self.client.post(self.url)
-        self.assertPermChecked(self.get_user(), self.perm)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        for method_name, perm_code in self.get_perm_map().items():
+            response = getattr(self.client, method_name)(self.url)
+            self.assertPermChecked(self.get_user(), perm_code)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_perm(self):
-        if not self.perm:
+        if not self.get_perm_map():
             return
 
         self.client.force_authenticate(self.get_user())
-        self.force_permission(self.get_user(), self.perm)
-        response = self.client.post(self.url)
-        self.assertPermChecked(self.get_user(), self.perm)
-        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertNotEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        for method_name, perm_code in self.get_perm_map().items():
+            self.force_permission(self.get_user(), perm=perm_code)
+            response = getattr(self.client, method_name)(self.url)
+            self.assertPermChecked(self.get_user(), perm_code)
+            self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertNotEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def get_user(self):
         if not hasattr(self, 'user') or not self.user:
