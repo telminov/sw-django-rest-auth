@@ -17,6 +17,7 @@ class AuthHelperMixin(object):
         self.requests_mock.stop()
 
     def assertPermChecked(self, user, perm):
+        self.assertTrue(self.requests_mock.get.called)
         call_args, call_kwargs = self.requests_mock.get.call_args
         self.assertEqual(settings.AUTH_SERVICE_CHECK_PERM_URL, call_args[0])
         self.assertEqual(user.username, call_kwargs['params']['user'])
@@ -45,19 +46,27 @@ class AuthTestCaseMixin(AuthHelperMixin):
     perm = None
     method_name = 'post'
 
+    def get_method_names(self):
+        if self.get_perm_map():
+            return self.get_perm_map().keys()
+        else:
+            return [self.method_name]
+
     def get_perm_map(self):
-        return {
-            self.method_name: self.perm,
-        }
+        if self.perm:
+            return {self.method_name: self.perm}
+        else:
+            return None
 
     def setUp(self):
         super(AuthTestCaseMixin, self).setUp()
         self.client.force_authenticate(self.get_user())
-        self.force_permission(self.get_user(), perm_list=self.get_perm_map().values())
+        if self.get_perm_map():
+            self.force_permission(self.get_user(), perm_list=self.get_perm_map().values())
 
     def test_not_auth(self):
         self.client.force_authenticate()         # unset authentication
-        for method_name in self.get_perm_map().keys():
+        for method_name in self.get_method_names():
             response = getattr(self.client, method_name)(self.url)
             self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
