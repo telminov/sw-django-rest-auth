@@ -20,6 +20,7 @@ import sw_rest_auth.views
 urlpatterns = [
     ...
     url(r'^check_token/', sw_rest_auth.views.check_token),
+    url(r'^check_login_password/', sw_rest_auth.views.check_login_password),
     url(r'^check_perm/', sw_rest_auth.views.check_perm),
     ...
 ]
@@ -29,6 +30,7 @@ add to settings.py TokenAuthentication method.
 ```python
 INSTALLED_APPS = [
     ...
+    'rest_framework.authtoken',
     'sw_rest_auth',
     ...
 ]
@@ -48,6 +50,10 @@ add to settings.py
 AUTH_SERVICE_CHECK_TOKEN_URL = 'https://.../check_token/'   # address for authentication service project
 AUTH_TOKEN = '0f49bc20b02bc70b034bd9d6036c8155e00109eb'     # token for connecting to authentication service
 AUTH_VERIFIED_SSL_CRT_PATH = '/etc/ssl/myCompanyCA.crt'     # optional path to auth service server ssl-certificate
+
+# for using service as auth backend for standard django authentication
+AUTHENTICATION_BACKENDS = ['sw_rest_auth.auth_backends.RestBackend']
+AUTH_SERVICE_CHECK_LOGIN_PASSWORD_URL = 'http://127.0.0.1:8000/check_login_password/'
 ```
 
 Add TokenServiceAuthentication to authentication_classes. For example:

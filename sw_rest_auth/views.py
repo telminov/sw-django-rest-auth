@@ -39,6 +39,34 @@ def check_token(request):
     return Response({'username': token.user.username})
 
 
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def check_login_password(request):
+    """
+    Resource check login and password combination is valid.
+    ---
+    request_serializer: serializers.CheckLoginPassword
+    response_serializer: serializers.User
+
+    responseMessages:
+        - code: 200
+          message: Login and password is valid
+
+        - code: 400
+          message: Login and password is not valid
+
+        - code: 401
+          message: Unauthorized
+    """
+    serializer = serializers.CheckLoginPassword(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data['username']
+    logger.debug('Username and password correct', extra={'username': username})
+    user_serializer = serializers.User(instance=serializers.AuthUser.objects.get(username=username))
+    return Response(user_serializer.data)
+
+
+
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def check_perm(request):

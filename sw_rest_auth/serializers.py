@@ -1,5 +1,6 @@
 # coding: utf-8
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.backends import ModelBackend
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from . import models
@@ -21,8 +22,8 @@ class CheckPerm(serializers.Serializer):
 
     def validate_user(self, value):
         try:
-            return User.objects.get(username=value)
-        except User.DoesNotExist:
+            return AuthUser.objects.get(username=value)
+        except AuthUser.DoesNotExist:
             raise serializers.ValidationError('User with username "{0}" not found'.format(value))
 
     def validate_perm(self, value):
@@ -44,3 +45,23 @@ class CheckPerm(serializers.Serializer):
                 ))
 
         return attrs
+
+
+class CheckLoginPassword(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+        if password and password:
+            is_correct = bool(ModelBackend().authenticate(username=username, password=password))
+            if not is_correct:
+                raise serializers.ValidationError('Incorrect login and password combination.')
+        return attrs
+
+
+class User(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        exclude = ('password', )
