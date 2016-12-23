@@ -4,3 +4,4 @@ from . import models
 
 admin.site.register(models.Permission)
 admin.site.register(models.UserPermission)
+admin.site.register(models.GroupPermission)

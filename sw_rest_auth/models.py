@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class Permission(models.Model):
@@ -21,3 +21,14 @@ class UserPermission(models.Model):
 
     def __str__(self):
         return '{0} - {1}'.format(self.user, self.permission)
+
+
+class GroupPermission(models.Model):
+    group = models.ForeignKey(Group)
+    permission = models.ForeignKey(Permission)
+
+    class Meta:
+        unique_together = ('group', 'permission')
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.group, self.permission)

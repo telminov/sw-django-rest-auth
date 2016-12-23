@@ -36,9 +36,14 @@ class CheckPerm(serializers.Serializer):
         user = attrs.get('user')
         perm = attrs.get('perm')
         if user and perm:
-            try:
-                models.UserPermission.objects.get(user=user, permission=perm)
-            except models.UserPermission.DoesNotExist:
+            user_qs = models.UserPermission.objects.filter(user=user, permission=perm)
+
+            group_qs = models.GroupPermission.objects.filter(
+                group__in=user.groups.all(),
+                permission=perm
+            )
+
+            if not (user_qs.exists() or group_qs.exists()):
                 raise serializers.ValidationError('User "{0}" have no permission with code "{1}"'.format(
                     user.username,
                     perm.code
