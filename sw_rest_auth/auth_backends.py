@@ -17,8 +17,7 @@ class RestBackend(object):
                 'headers': headers,
                 'data': data,
             }
-            if auth_verified_ssl_crt:
-                kwargs['verify'] = auth_verified_ssl_crt
+            kwargs['verify'] = auth_verified_ssl_crt
             r = requests.post(url, **kwargs)
         except requests.ConnectionError:
             return None
