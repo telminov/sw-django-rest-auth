@@ -32,8 +32,7 @@ class CodePermission(permissions.BasePermission):
                 'headers': headers,
                 'params': params,
             }
-            if auth_verified_ssl_crt:
-                kwargs['verify'] = auth_verified_ssl_crt
+            kwargs['verify'] = auth_verified_ssl_crt
             r = requests.get(url, **kwargs)
 
         except requests.ConnectionError:

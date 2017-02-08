@@ -50,8 +50,7 @@ class TokenServiceAuthentication(BaseAuthentication):
                 'headers': headers,
                 'data': data,
             }
-            if auth_verified_ssl_crt:
-                kwargs['verify'] = auth_verified_ssl_crt
+            kwargs['verify'] = auth_verified_ssl_crt
             r = requests.post(url, **kwargs)
         except requests.ConnectionError:
             raise exceptions.AuthenticationFailed('Invalid token header. ConnectionError.')
