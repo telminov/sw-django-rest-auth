@@ -42,3 +42,6 @@ class RestBackend(object):
         except User.DoesNotExist:
             return None
 
+    def has_perm(self, user, perm, obj):
+        from .permissions import CodePermission
+        return CodePermission.has_permission_by_params(user.username, perm, raise_exception=False)
