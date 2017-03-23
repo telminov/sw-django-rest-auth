@@ -10,6 +10,7 @@ DATABASES = {
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
     'rest_framework.authtoken',
     'sw_rest_auth',
 ]
