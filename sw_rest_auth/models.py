@@ -8,6 +8,9 @@ class Permission(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text='human permission name')
     description = models.TextField(blank=True, help_text='detailed description')
 
+    class Meta:
+        ordering = ('code', )
+
     def __str__(self):
         return '{0} ({1})'.format(self.name, self.code)
 
@@ -18,6 +21,7 @@ class UserPermission(models.Model):
 
     class Meta:
         unique_together = ('user', 'permission')
+        ordering = ('user__username', 'permission__code')
 
     def __str__(self):
         return '{0} - {1}'.format(self.user, self.permission)
@@ -29,6 +33,7 @@ class GroupPermission(models.Model):
 
     class Meta:
         unique_together = ('group', 'permission')
+        ordering = ('group__name', 'permission__code')
 
     def __str__(self):
         return '{0} - {1}'.format(self.group, self.permission)
