@@ -27,7 +27,7 @@ class AuthHelperMixin(object):
         if not perm_list and perm:
             perm_list = [perm]
 
-        def side_effect(url, headers, params):
+        def side_effect(url, headers, params, verify):
             response_mock = mock.Mock()
             if params['user'] == user.username and params['perm'] in perm_list:
                 response_mock.status_code = status.HTTP_200_OK
