@@ -58,7 +58,7 @@ def check_login_password(request):
         - code: 401
           message: Unauthorized
     """
-    serializer = serializers.CheckLoginPassword(data=request.data)
+    serializer = serializers.CheckLoginPassword(request=request, data=request.data)
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data['username']
     logger.debug('Username and password correct', extra={'username': username})

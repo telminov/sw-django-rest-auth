@@ -56,11 +56,15 @@ class CheckLoginPassword(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+    def __init__(self, *args, request, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
     def validate(self, attrs):
         username = attrs.get('username')
         password = attrs.get('password')
         if password and password:
-            is_correct = bool(ModelBackend().authenticate(username=username, password=password))
+            is_correct = bool(ModelBackend().authenticate(self.request, username=username, password=password))
             if not is_correct:
                 raise serializers.ValidationError('Incorrect login and password combination.')
         return attrs
