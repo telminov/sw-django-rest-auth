@@ -16,8 +16,8 @@ class Permission(models.Model):
 
 
 class UserPermission(models.Model):
-    user = models.ForeignKey(User)
-    permission = models.ForeignKey(Permission)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('user', 'permission')
@@ -28,8 +28,8 @@ class UserPermission(models.Model):
 
 
 class GroupPermission(models.Model):
-    group = models.ForeignKey(Group)
-    permission = models.ForeignKey(Permission)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('group', 'permission')
