@@ -1,8 +1,9 @@
 # coding: utf-8
-from django.core.urlresolvers import reverse
-from django.test import mock
-from django.contrib.auth.models import User
-from django.conf import settings
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
+
 from rest_framework import test, status
 from rest_framework.authtoken.models import Token
 from .. import models

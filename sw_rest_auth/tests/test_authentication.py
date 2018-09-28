@@ -1,6 +1,7 @@
 # coding: utf-8
 import requests
-from django.test import mock
+from mock import mock
+
 from django.contrib.auth.models import User
 from django.conf import settings
 from rest_framework import test, status
