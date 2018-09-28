@@ -20,5 +20,6 @@ setup(
         'django',
         'djangorestframework',
         'requests',
+        'mock',
     ],
 )

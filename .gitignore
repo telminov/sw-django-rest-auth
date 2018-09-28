@@ -4,3 +4,4 @@ build/
 dist/
 sw_django_rest_auth.egg-info
 virt_env
+venv/
