@@ -57,7 +57,7 @@ class CheckLoginPassword(serializers.Serializer):
     password = serializers.CharField()
 
     def __init__(self, *args, request, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CheckLoginPassword, self).__init__(*args, **kwargs)
         self.request = request
 
     def validate(self, attrs):
